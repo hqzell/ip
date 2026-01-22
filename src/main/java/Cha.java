@@ -15,16 +15,28 @@ public class Cha {
 
         System.out.println("Hello! I'm\n" + logo
             + "\nWhat Cha can I get for you?\n" 
-         + "____________________________________________________________\n");
+         + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
+        String list = "";
+        Integer count = 1;
         String user = scanner.nextLine();
         while (!user.equals("bye")) {
-            System.out.println(user +
-                "\n____________________________________________________________\n");
+
+            if (user.equals("list")) {
+                System.out.println(list +
+                    "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                user = scanner.nextLine();
+                continue;
+            }
+
+            list += count + ". " + user + "\n";
+            System.out.println("added: " + user +
+                "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+            count++;
             user = scanner.nextLine();
         }
         scanner.close();
         System.out.println("CHA CHA! See you again soon!\n" 
-            + "____________________________________________________________");
+            + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     }
 }
