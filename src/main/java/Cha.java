@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Cha {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ChaException {
         String logo =
               "  _____ _   _     _        ~~      \n"
             + " / ____| | | |   / \\   ___~_~~____\n"
@@ -46,39 +46,60 @@ public class Cha {
             }
 
             // Add tasks
-            if (response.startsWith("todo ")) {
-                String desc = response.substring(5).trim();
-                tasks[count] = new ToDo(desc);
-                System.out.println("On it! One Cha coming right up :D\n  " + tasks[count]
-                    + "\nNow you have " + (count + 1) + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-                count++;
-            } else if (response.startsWith("deadline ")) {
-                // Format: deadline <desc> /by <time>
-                String[] parts = response.substring(9).split("/by");
-                String desc = parts[0].trim();
-                String by = parts.length > 1 ? parts[1].trim() : "";
-                tasks[count] = new Deadline(desc, by);
-                System.out.println("We got you, your Cha is on the way! \n  " + tasks[count]
-                    + "\nNow you have " + (count + 1) + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-                count++;
-            } else if (response.startsWith("event ")) {
-                // Format: event <desc> /from <start> /to <end>
-                String[] descAndTimes = response.substring(6).split("/from");
-                String desc = descAndTimes[0].trim();
-                String[] times = descAndTimes[1].split("/to");
-                String from = times[0].trim();
-                String to = times[1].trim();
-                tasks[count] = new Event(desc, from, to);
-                System.out.println("Scheduled! We'll see you there~\n  " + tasks[count]
-                    + "\nNow you have " + (count + 1) + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-                count++;
+            try {
+                if (response.startsWith("todo ")) {
+                    String desc = response.substring(5).trim();
+                    if (desc.isEmpty()) {
+                        throw new ChaException("CHA doesn't know what to do! (The description cannot be empty)");
+                    }
+                    tasks[count] = new ToDo(desc);
+                    System.out.println("On it! One Cha coming right up :D\n  " + tasks[count]
+                        + "\nNow you have " + (count + 1) + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                    count++;
+                } else if (response.startsWith("deadline ")) {
+                    // Format: deadline <desc> /by <time>
+                    String[] parts = response.substring(9).split("/by");
+                    String desc = parts[0].trim();
+                    if (desc.isEmpty()) {
+                        throw new ChaException("CHA doesn't know what to do! (The description cannot be empty)");
+                    }
+                    String by = parts.length > 1 ? parts[1].trim() : "";
+                    if (by.isEmpty()) {
+                        throw new ChaException("CHA doesn't know when it's due! (Use /by <time> to let Cha know the deadline)");
+                    }
+                    tasks[count] = new Deadline(desc, by);
+                    System.out.println("We got you, your Cha is on the way! \n  " + tasks[count]
+                        + "\nNow you have " + (count + 1) + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                    count++;
+                } else if (response.startsWith("event ")) {
+                    // Format: event <desc> /from <start> /to <end>
+                    String[] descAndTimes = response.substring(6).split("/from");
+                    String desc = descAndTimes[0].trim();
+                    if (desc.isEmpty()) {
+                        throw new ChaException("CHA doesn't know what to do! (The description cannot be empty)");
+                    }
+                    String times = descAndTimes.length > 1 ? descAndTimes[1].trim() : "";
+                    if (times.isEmpty()) {
+                        throw new ChaException("CHA doesn't know when it starts! (Use /from <start> /to <end> to let Cha know the event time)");
+                    }
+                    String[] timeParts = times.split("/to");
+                    String from = timeParts[0].trim();
+                    String to = timeParts.length > 1 ? timeParts[1].trim() : "";
+                    if (to.isEmpty()) {
+                        throw new ChaException("CHA doesn't know when it ends! (Use /from <start> /to <end> to let Cha know the event time)");
+                    }
+                    tasks[count] = new Event(desc, from, to);
+                    System.out.println("Scheduled! We'll see you there~\n  " + tasks[count]
+                        + "\nNow you have " + (count + 1) + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                    count++;
             } else {
                 System.out.println("Unknown command!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
             }
-
-            response = scanner.nextLine();
+        } catch (ChaException e) {
+            System.out.println(e.getMessage() + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
         }
-
+            response = scanner.nextLine();
+    }
         scanner.close();
         System.out.println("CHA CHA CHA! See you again soon!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     }
