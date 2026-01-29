@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Cha {
@@ -12,7 +13,7 @@ public class Cha {
             + " \\_____|_| |_|_/     \\_\\ \\______/\n";
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
+        ArrayList<Task> tasks = new ArrayList<>();
         int count = 0;
 
         System.out.println("Hello! I'm\n" + logo
@@ -25,7 +26,7 @@ public class Cha {
             if (response.equals("list")) {
                 System.out.println("Here are your Chas:");
                 for (int i = 0; i < count; i++) {
-                    System.out.println((i + 1) + "." + tasks[i]);
+                    System.out.println((i + 1) + "." + tasks.get(i));
                 }
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                 response = scanner.nextLine();
@@ -35,8 +36,8 @@ public class Cha {
             if (response.matches("mark \\d+")) {
                 int i = Integer.parseInt(response.replaceAll("\\D", "")) - 1;
                 if (i >= 0 && i < count) {
-                    tasks[i].markAsDone();
-                    System.out.println("Great! Your Cha is completed:\n  " + tasks[i]
+                    tasks.get(i).markAsDone();
+                    System.out.println("Great! Your Cha is completed:\n  " + tasks.get(i) 
                         + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                 } else {
                     System.out.println("Invalid task number.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
@@ -45,6 +46,16 @@ public class Cha {
                 continue;
             }
 
+            if (response.matches("delete \\d+")) {
+                int i = Integer.parseInt(response.replaceAll("\\D", "")) - 1;
+                if (i >= 0 && i < count) {
+                    Task t = tasks.get(i);
+                    tasks.remove(i);
+                    count--;
+                    System.out.println("Bye bye Cha! I've removed this task:\n " + t
+                        + "\nNow you have " + count + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                }
+            }
             // Add tasks
             try {
                 if (response.startsWith("todo ")) {
@@ -52,8 +63,8 @@ public class Cha {
                     if (desc.isEmpty()) {
                         throw new ChaException("CHA doesn't know what to do! (The description cannot be empty)");
                     }
-                    tasks[count] = new ToDo(desc);
-                    System.out.println("On it! One Cha coming right up :D\n  " + tasks[count]
+                    tasks.add(new ToDo(desc));
+                    System.out.println("On it! One Cha coming right up :D\n  " + tasks.get(tasks.size() - 1)
                         + "\nNow you have " + (count + 1) + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                     count++;
                 } else if (response.startsWith("deadline ")) {
@@ -67,8 +78,8 @@ public class Cha {
                     if (by.isEmpty()) {
                         throw new ChaException("CHA doesn't know when it's due! (Use /by <time> to let Cha know the deadline)");
                     }
-                    tasks[count] = new Deadline(desc, by);
-                    System.out.println("We got you, your Cha is on the way! \n  " + tasks[count]
+                    tasks.add(new Deadline(desc, by));
+                    System.out.println("We got you, your Cha is on the way! \n  " + tasks.get(tasks.size() - 1)
                         + "\nNow you have " + (count + 1) + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                     count++;
                 } else if (response.startsWith("event ")) {
@@ -88,8 +99,8 @@ public class Cha {
                     if (to.isEmpty()) {
                         throw new ChaException("CHA doesn't know when it ends! (Use /from <start> /to <end> to let Cha know the event time)");
                     }
-                    tasks[count] = new Event(desc, from, to);
-                    System.out.println("Scheduled! We'll see you there~\n  " + tasks[count]
+                    tasks.add(new Event(desc, from, to));
+                    System.out.println("Scheduled! We'll see you there~\n  " +  tasks.get(tasks.size() - 1)
                         + "\nNow you have " + (count + 1) + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                     count++;
             } else {
