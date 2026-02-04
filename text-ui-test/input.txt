@@ -3,4 +3,5 @@ deadline hojicha /by friday
 event open shop /from mon 2pm /to 4pm
 list
 mark 2
+delete 1
 bye
