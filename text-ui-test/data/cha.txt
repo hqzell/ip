@@ -1,0 +1,6 @@
+T | 0 | make matcha
+D | 1 | hojicha | friday
+E | 0 | open shop | mon 2pm - 4pm
+T | 0 | make matcha
+D | 0 | hojicha | friday
+E | 0 | open shop | mon 2pm - 4pm

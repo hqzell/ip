@@ -13,7 +13,8 @@ public class Cha {
             + " \\_____|_| |_|_/     \\_\\ \\______/\n";
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage();
+        ArrayList<Task> tasks = storage.load();
         int count = 0;
 
         System.out.println("Hello! I'm\n" + logo
@@ -30,6 +31,7 @@ public class Cha {
                 }
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                 response = scanner.nextLine();
+                storage.save(tasks);
                 continue;
             }
 
@@ -43,6 +45,7 @@ public class Cha {
                     System.out.println("Invalid task number.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                 }
                 response = scanner.nextLine();
+                storage.save(tasks);
                 continue;
             }
 
@@ -55,6 +58,9 @@ public class Cha {
                     System.out.println("Bye bye Cha! I've removed this task:\n " + t
                         + "\nNow you have " + count + " Chas brewing.\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                 }
+                response = scanner.nextLine();
+                storage.save(tasks);
+                continue;
             }
             // Add tasks
             try {
@@ -109,8 +115,9 @@ public class Cha {
         } catch (ChaException e) {
             System.out.println(e.getMessage() + "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
         }
-            response = scanner.nextLine();
-    }
+        response = scanner.nextLine();
+        storage.save(tasks);
+        }
         scanner.close();
         System.out.println("CHA CHA CHA! See you again soon!\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     }

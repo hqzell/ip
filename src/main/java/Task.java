@@ -17,8 +17,11 @@ public abstract class Task {
 
     public abstract String getType();
 
+    public abstract String toFileFormat();
+
     @Override
     public String toString() {
         return "[" + getType() + "][" + getStatus() + "] " + desc;
     }
+
 }

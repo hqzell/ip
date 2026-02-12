@@ -12,6 +12,12 @@ public class Deadline extends Task {
     }
 
     @Override
+    public String toFileFormat() {
+        return "D | " + (isDone ? "1" : "0") + " | "
+                + desc + " | " + by;
+    }
+
+    @Override
     public String toString() {
         return super.toString() + " (by: " + by + ")";
     }

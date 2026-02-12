@@ -4,6 +4,12 @@ public class ToDo extends Task {
     }
 
     @Override
+    public String toFileFormat() {
+        return "T | " + (isDone ? "1" : "0") + " | " + desc;
+    }
+
+
+    @Override
     public String getType() {
         return "T";
     }
