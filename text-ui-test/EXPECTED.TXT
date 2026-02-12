@@ -15,7 +15,7 @@ Now you have 1 Chas brewing.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We got you, your Cha is on the way!
-  [D][ ] hojicha (by: friday)
+  [D][ ] hojicha (by: 15 Oct 2019, 6PM)
 Now you have 2 Chas brewing.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -26,12 +26,12 @@ Now you have 3 Chas brewing.
 
 Here are your Chas:
 1.[T][ ] make matcha
-2.[D][ ] hojicha (by: friday)
+2.[D][ ] hojicha (by: 15 Oct 2019, 6PM)
 3.[E][ ] open shop (from: mon 2pm to: 4pm)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Great! Your Cha is completed:
-  [D][X] hojicha (by: friday)
+  [D][X] hojicha (by: 15 Oct 2019, 6PM)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Bye bye Cha! I've removed this task:
@@ -41,4 +41,3 @@ Now you have 2 Chas brewing.
 
 CHA CHA CHA! See you again soon!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-

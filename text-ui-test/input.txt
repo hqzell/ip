@@ -1,5 +1,5 @@
 todo make matcha
-deadline hojicha /by friday
+deadline hojicha /by 2019-10-15 1800
 event open shop /from mon 2pm /to 4pm
 list
 mark 2

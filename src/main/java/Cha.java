@@ -1,3 +1,6 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -119,7 +122,14 @@ public class Cha {
         String by = (parts.length > 1 ? parts[1].trim() : "");
         if (by.isEmpty()) throw new ChaException(
             "CHA doesn't know when it's due! (Use /by <time>)");
-        tasks.add(new Deadline(desc, by));
+        try {
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+            LocalDateTime byFormatted = LocalDateTime.parse(by, inputFormatter);
+            tasks.add(new Deadline(desc, byFormatted));
+        } catch (DateTimeParseException e) {
+            throw new ChaException(
+                "CHA can't understand that time! (Use format: yyyy-MM-dd HHmm)");
+        }
         System.out.println("We got you, your Cha is on the way!\n  " 
             + tasks.get(tasks.size() - 1)
             + "\nNow you have " + tasks.size() 

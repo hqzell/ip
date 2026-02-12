@@ -1,11 +1,12 @@
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List; 
+import java.util.List;
 
 /**
  * Handles loading and saving tasks to disk.
@@ -13,6 +14,7 @@ import java.util.List;
 public class Storage {
 
     private static final String FILE_PATH = "data/cha.txt";
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
     /**
      * Loads tasks from disk.
@@ -21,29 +23,19 @@ public class Storage {
      */
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
+        Path path = Path.of(FILE_PATH);
 
-        try {
-            Path path = Path.of(FILE_PATH);
+        if (!Files.exists(path)) {
+            createDataFile(path);
+            return tasks;
+        }
 
-            if (!Files.exists(path)) {
-                createDataFile(path);
-                return tasks;
+        List<String> lines = readLines(path);
+        for (String line : lines) {
+            Task task = safeParseTask(line);
+            if (task != null) {
+                tasks.add(task);
             }
-
-            List<String> lines = Files.readAllLines(path);
-
-            for (String line : lines) {
-                try {
-                    Task task = parseTask(line);
-                    tasks.add(task);
-                } catch (Exception e) {
-                    // Stretch goal: skip corrupted lines safely
-                    System.out.println("Warning: Skipping corrupted line: " + line);
-                }
-            }
-
-        } catch (IOException e) {
-            System.out.println("Error loading tasks: " + e.getMessage());
         }
 
         return tasks;
@@ -56,22 +48,46 @@ public class Storage {
      */
     public void save(ArrayList<Task> tasks) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-
             for (Task task : tasks) {
                 writer.write(task.toFileFormat());
                 writer.newLine();
             }
-
         } catch (IOException e) {
             System.out.println("Error saving tasks: " + e.getMessage());
         }
     }
 
-    private void createDataFile(Path path) throws IOException {
-        Files.createDirectories(path.getParent());
-        Files.createFile(path);
+    /** Creates the data file and its directories if missing */
+    private void createDataFile(Path path) {
+        try {
+            Files.createDirectories(path.getParent());
+            Files.createFile(path);
+        } catch (IOException e) {
+            System.out.println("Error creating data file: " + e.getMessage());
+        }
     }
 
+    /** Reads all lines from the file, safely */
+    private List<String> readLines(Path path) {
+        try {
+            return Files.readAllLines(path);
+        } catch (IOException e) {
+            System.out.println("Error reading tasks: " + e.getMessage());
+            return List.of();
+        }
+    }
+
+    /** Parses a task from a line, returns null if parsing fails */
+    private Task safeParseTask(String line) {
+        try {
+            return parseTask(line);
+        } catch (Exception e) {
+            System.out.println("Warning: Skipping corrupted line: " + line);
+            return null;
+        }
+    }
+
+    /** Parses a line into a Task */
     private Task parseTask(String line) {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
@@ -81,23 +97,27 @@ public class Storage {
         Task task;
 
         switch (type) {
-        case "T":
-            task = new ToDo(description);
-            break;
-        case "D":
-            task = new Deadline(description, parts[3]);
-            break;
-        case "E":
-            task = new Event(description, parts[3], parts[4]);
-            break;
-        default:
-            throw new IllegalArgumentException("Invalid task type");
+            case "T":
+                task = new ToDo(description);
+                break;
+            case "D":
+                task = parseDeadline(description, parts[3]);
+                break;
+            case "E":
+                task = new Event(description, parts[3], parts[4]);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid task type: " + type);
         }
 
-        if (isDone) {
-            task.markAsDone();
-        }
+        if (isDone) task.markAsDone();
 
         return task;
+    }
+
+    /** Converts a deadline string into a Deadline task */
+    private Deadline parseDeadline(String description, String byString) {
+        LocalDateTime by = LocalDateTime.parse(byString, DATE_FORMAT);
+        return new Deadline(description, by);
     }
 }
