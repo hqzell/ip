@@ -14,7 +14,7 @@ On it! One Cha coming right up :D
 Now you have 1 Chas brewing.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We got you, your Cha is on the way! 
+We got you, your Cha is on the way!
   [D][ ] hojicha (by: friday)
 Now you have 2 Chas brewing.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,5 +34,11 @@ Great! Your Cha is completed:
   [D][X] hojicha (by: friday)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Bye bye Cha! I've removed this task:
+  [T][ ] make matcha
+Now you have 2 Chas brewing.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 CHA CHA CHA! See you again soon!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
