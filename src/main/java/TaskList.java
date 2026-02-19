@@ -28,7 +28,7 @@ public class TaskList {
     }
 
     /** Marks a task as done by index and returns it */
-    public Task markAsDone(int index) throws IndexOutOfBoundsException {
+    public Task markTaskAsDone(int index) throws IndexOutOfBoundsException {
         Task task = tasks.get(index);
         task.markAsDone();
         return task;
@@ -47,5 +47,16 @@ public class TaskList {
     /** Returns an unmodifiable copy of the task list */
     public ArrayList<Task> getAllTasks() {
         return new ArrayList<>(tasks);
+    }
+
+    public String listTasks() {
+        if (tasks.isEmpty()) {
+            return "No tasks in your list!";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < tasks.size(); i++) {
+            sb.append((i + 1)).append(".").append(tasks.get(i)).append("\n");
+        }
+        return sb.toString().trim();
     }
 }

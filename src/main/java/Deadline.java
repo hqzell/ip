@@ -1,5 +1,6 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 /**
@@ -20,6 +21,24 @@ public class Deadline extends Task {
     public Deadline(String description, LocalDateTime by) {
         super(description);
         this.by = by;
+    }
+
+    public static Deadline parse(String input) throws ChaException {
+        String[] parts = input.split(" /by ");
+        String desc = parts[0].trim();
+        if (desc.isEmpty()) throw new ChaException(
+            "CHA doesn't know what to do! (The description cannot be empty)");
+        String by = (parts.length > 1 ? parts[1].trim() : "");
+        if (by.isEmpty()) throw new ChaException(
+            "CHA doesn't know when it's due! (Use /by <time>)");
+        try {
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+            LocalDateTime byFormatted = LocalDateTime.parse(by, inputFormatter);
+            return new Deadline(desc, byFormatted);
+        } catch (DateTimeParseException e) {
+            throw new ChaException(
+                "CHA can't understand that time! (Use format: yyyy-MM-dd HHmm)");
+        }
     }
 
     /**
