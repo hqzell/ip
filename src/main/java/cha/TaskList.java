@@ -1,4 +1,8 @@
+package cha;
+
 import java.util.ArrayList;
+
+import cha.tasks.Task;
 
 /**
  * Encapsulates the list of tasks and provides operations on them.

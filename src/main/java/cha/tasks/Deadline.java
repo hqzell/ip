@@ -1,7 +1,11 @@
+package cha.tasks;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
+
+import cha.ChaException;
 
 /**
  * Represents a deadline task that must be completed before a specific

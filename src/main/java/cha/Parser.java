@@ -1,3 +1,10 @@
+package cha;
+
+import cha.tasks.Deadline;
+import cha.tasks.Event;
+import cha.tasks.Task;
+import cha.tasks.ToDo;
+
 public class Parser {
 
     public static boolean parse(String command, TaskList tasks, Ui ui, Storage storage) {

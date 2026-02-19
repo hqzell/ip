@@ -1,3 +1,5 @@
+package cha;
+
 public class Cha {
 
     public static void main(String[] args) {

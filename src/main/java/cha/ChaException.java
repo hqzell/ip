@@ -1,3 +1,5 @@
+package cha;
+
 public class ChaException extends Exception {
 
     public ChaException(String message) {

@@ -1,4 +1,5 @@
-// Ui.java
+package cha;
+
 import java.util.Scanner;
 
 public class Ui {

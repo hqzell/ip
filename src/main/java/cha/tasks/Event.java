@@ -1,3 +1,7 @@
+package cha.tasks;
+
+import cha.ChaException;
+
 public class Event extends Task {
     protected String from;
     protected String to;
