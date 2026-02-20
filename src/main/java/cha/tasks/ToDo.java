@@ -10,7 +10,6 @@ public class ToDo extends Task {
         return "T | " + (isDone ? "1" : "0") + " | " + desc;
     }
 
-
     @Override
     public String getType() {
         return "T";

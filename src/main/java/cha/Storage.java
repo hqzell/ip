@@ -18,6 +18,8 @@ import java.util.List;
 
 /**
  * Handles loading and saving tasks to disk.
+ * Tasks are stored in a text file in a predefined format and
+ * reconstructed into Task objects when loaded.
  */
 public class Storage {
 
@@ -50,9 +52,10 @@ public class Storage {
     }
 
     /**
-     * Saves tasks to disk.
+     * Saves the given list of tasks to disk.
+     * Each task is written in its file format representation.
      *
-     * @param tasks list of tasks to save
+     * @param tasks The list of tasks to be saved.
      */
     public void save(ArrayList<Task> tasks) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
@@ -65,7 +68,11 @@ public class Storage {
         }
     }
 
-    /** Creates the data file and its directories if missing */
+    /**
+     * Creates the data file and its parent directories if they do not exist.
+     *
+     * @param path The file path to create.
+     */
     private void createDataFile(Path path) {
         try {
             Files.createDirectories(path.getParent());
@@ -75,7 +82,13 @@ public class Storage {
         }
     }
 
-    /** Reads all lines from the file, safely */
+    /**
+     * Reads all lines from the specified file path.
+     *
+     * @param path The path of the file to read.
+     * @return A list of strings representing each line in the file.
+     *         Returns an empty list if reading fails.
+     */
     private List<String> readLines(Path path) {
         try {
             return Files.readAllLines(path);
@@ -85,7 +98,13 @@ public class Storage {
         }
     }
 
-    /** Parses a task from a line, returns null if parsing fails */
+    /**
+     * Safely parses a task from a line of text.
+     * If parsing fails due to corrupted format, the line is skipped.
+     *
+     * @param line A line from the data file.
+     * @return A parsed Task, or null if parsing fails.
+     */
     private Task safeParseTask(String line) {
         try {
             return parseTask(line);
@@ -95,7 +114,13 @@ public class Storage {
         }
     }
 
-    /** Parses a line into a Task */
+    /**
+     * Parses a line from the data file into a Task.
+     *
+     * @param line A properly formatted line representing a task.
+     * @return The reconstructed Task.
+     * @throws IllegalArgumentException If the task type is invalid.
+     */
     private Task parseTask(String line) {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
@@ -118,12 +143,19 @@ public class Storage {
                 throw new IllegalArgumentException("Invalid task type: " + type);
         }
 
-        if (isDone) task.markAsDone();
+        if (isDone)
+            task.markAsDone();
 
         return task;
     }
 
-    /** Converts a deadline string into a Deadline task */
+    /**
+     * Parses a deadline date-time string and creates a Deadline task.
+     *
+     * @param description The task description.
+     * @param byString    The deadline date-time string in yyyy-MM-dd HHmm format.
+     * @return the created Deadline object.
+     */
     private Deadline parseDeadline(String description, String byString) {
         LocalDateTime by = LocalDateTime.parse(byString, DATE_FORMAT);
         return new Deadline(description, by);

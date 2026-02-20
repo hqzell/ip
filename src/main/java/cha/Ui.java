@@ -6,7 +6,8 @@ public class Ui {
     private final Scanner scanner = new Scanner(System.in);
 
     public void showWelcome(String logo) {
-        System.out.println("Hello! I'm\n" + logo + "\nWhat Cha can I get for you?\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        System.out.println(
+                "Hello! I'm\n" + logo + "\nWhat Cha can I get for you?\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
     }
 
     public String readCommand() {
@@ -23,6 +24,6 @@ public class Ui {
 
     public void showMessage(String message) {
         System.out.println(message);
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");  
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
     }
 }
