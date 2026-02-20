@@ -43,6 +43,34 @@ public class TaskList {
         return tasks.get(index);
     }
 
+    /**
+     * Returns a formatted string of tasks whose descriptions
+     * contain the given keyword.
+     *
+     * @param keyword The keyword to search for.
+     * @return A formatted string of matching tasks.
+     */
+    public String findTask(String keyword) {
+        StringBuilder sb = new StringBuilder();
+        int matchCount = 0;
+
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).toString().toLowerCase().contains(keyword.toLowerCase())) {
+                matchCount++;
+                sb.append(matchCount)
+                        .append(".")
+                        .append(tasks.get(i))
+                        .append("\n");
+            }
+        }
+
+        if (matchCount == 0) {
+            return "No matching Chas found!";
+        }
+
+        return sb.toString().trim();
+    }
+
     /** Returns the number of tasks */
     public int size() {
         return tasks.size();

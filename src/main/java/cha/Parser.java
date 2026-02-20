@@ -14,70 +14,82 @@ public class Parser {
         try {
             switch (action) {
 
-            case "bye":
-                ui.showMessage("CHA CHA CHA! See you again soon!");
-                return true;
+                case "bye":
+                    ui.showMessage("CHA CHA CHA! See you again soon!");
+                    return true;
 
-            case "list":
-                if (tasks.size() == 0) {
-                    ui.showMessage("No Chas brewing yet!");
-                } else {
-                    ui.showMessage("Here are your Chas:\n"
-                        + tasks.listTasks());
-                }
-                break;
+                case "list":
+                    if (tasks.size() == 0) {
+                        ui.showMessage("No Chas brewing yet!");
+                    } else {
+                        ui.showMessage("Here are your Chas:\n"
+                                + tasks.listTasks());
+                    }
+                    break;
 
-            case "mark":
-                int markIdx = Integer.parseInt(words[1]) - 1;
-                Task marked = tasks.markTaskAsDone(markIdx);
-                storage.save(tasks.getAllTasks());
+                case "mark":
+                    int markIdx = Integer.parseInt(words[1]) - 1;
+                    Task marked = tasks.markTaskAsDone(markIdx);
+                    storage.save(tasks.getAllTasks());
 
-                ui.showMessage("Great! Your Cha is completed:\n  "
-                        + marked);
-                break;
+                    ui.showMessage("Great! Your Cha is completed:\n  "
+                            + marked);
+                    break;
 
-            case "delete":
-                int delIdx = Integer.parseInt(words[1]) - 1;
-                Task removed = tasks.deleteTask(delIdx);
-                storage.save(tasks.getAllTasks());
+                case "delete":
+                    int delIdx = Integer.parseInt(words[1]) - 1;
+                    Task removed = tasks.deleteTask(delIdx);
+                    storage.save(tasks.getAllTasks());
 
-                ui.showMessage("Bye bye Cha! I've removed this task:\n  "
-                        + removed
-                        + "\nNow you have " + tasks.size() + " Chas brewing.");
-                break;
+                    ui.showMessage("Bye bye Cha! I've removed this task:\n  "
+                            + removed
+                            + "\nNow you have " + tasks.size() + " Chas brewing.");
+                    break;
 
-            case "todo":
-                Task todo = new ToDo(words[1].trim());
-                tasks.addTask(todo);
-                storage.save(tasks.getAllTasks());
+                case "find":
+                    if (words.length < 2 || words[1].trim().isEmpty()) {
+                        throw new ChaException("Please provide a keyword to search.");
+                    }
 
-                ui.showMessage("On it! One Cha coming right up :D\n  "
-                        + todo
-                        + "\nNow you have " + tasks.size() + " Chas brewing.");
-                break;
+                    String keyword = words[1].trim();
+                    String results = tasks.findTasks(keyword);
 
-            case "deadline":
-                Task deadline = Deadline.parse(words[1].trim());
-                tasks.addTask(deadline);
-                storage.save(tasks.getAllTasks());
+                    ui.showMessage("Here are the matching tasks in your list:\n"
+                            + results);
+                    break;
 
-                ui.showMessage("We got you, your Cha is on the way!\n  "
-                        + deadline
-                        + "\nNow you have " + tasks.size() + " Chas brewing.");
-                break;
+                case "todo":
+                    Task todo = new ToDo(words[1].trim());
+                    tasks.addTask(todo);
+                    storage.save(tasks.getAllTasks());
 
-            case "event":
-                Task event = Event.parse(words[1].trim());
-                tasks.addTask(event);
-                storage.save(tasks.getAllTasks());
+                    ui.showMessage("On it! One Cha coming right up :D\n  "
+                            + todo
+                            + "\nNow you have " + tasks.size() + " Chas brewing.");
+                    break;
 
-                ui.showMessage("Scheduled! We'll see you there~\n  "
-                        + event
-                        + "\nNow you have " + tasks.size() + " Chas brewing.");
-                break;
+                case "deadline":
+                    Task deadline = Deadline.parse(words[1].trim());
+                    tasks.addTask(deadline);
+                    storage.save(tasks.getAllTasks());
 
-            default:
-                ui.showError("Unknown command!");
+                    ui.showMessage("We got you, your Cha is on the way!\n  "
+                            + deadline
+                            + "\nNow you have " + tasks.size() + " Chas brewing.");
+                    break;
+
+                case "event":
+                    Task event = Event.parse(words[1].trim());
+                    tasks.addTask(event);
+                    storage.save(tasks.getAllTasks());
+
+                    ui.showMessage("Scheduled! We'll see you there~\n  "
+                            + event
+                            + "\nNow you have " + tasks.size() + " Chas brewing.");
+                    break;
+
+                default:
+                    ui.showError("Unknown command!");
             }
 
         } catch (IndexOutOfBoundsException e) {
