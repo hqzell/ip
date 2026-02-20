@@ -82,7 +82,6 @@ public class Storage {
         }
     }
 
-
     /**
      * Reads all lines from the specified file path.
      *
@@ -144,7 +143,8 @@ public class Storage {
                 throw new IllegalArgumentException("Invalid task type: " + type);
         }
 
-        if (isDone) task.markAsDone();
+        if (isDone)
+            task.markAsDone();
 
         return task;
     }
@@ -153,7 +153,7 @@ public class Storage {
      * Parses a deadline date-time string and creates a Deadline task.
      *
      * @param description The task description.
-     * @param byString The deadline date-time string in yyyy-MM-dd HHmm format.
+     * @param byString    The deadline date-time string in yyyy-MM-dd HHmm format.
      * @return the created Deadline object.
      */
     private Deadline parseDeadline(String description, String byString) {

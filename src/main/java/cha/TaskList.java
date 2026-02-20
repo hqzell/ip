@@ -14,7 +14,8 @@ public class TaskList {
 
     /**
      * Creates a TaskList with an existing list of tasks.
-     * A defensive copy of the given list is created to prevent external modification.
+     * A defensive copy of the given list is created to prevent external
+     * modification.
      *
      * @param tasks The initial list of tasks.
      */
@@ -105,9 +106,9 @@ public class TaskList {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < tasks.size(); i++) {
             sb.append((i + 1))
-              .append(".")
-              .append(tasks.get(i))
-              .append("\n");
+                    .append(".")
+                    .append(tasks.get(i))
+                    .append("\n");
         }
         return sb.toString().trim();
     }

@@ -16,8 +16,8 @@ public class Ui {
      * @param logo The ASCII logo to display.
      */
     public void showWelcome(String logo) {
-        System.out.println("Hello! I'm\n" + logo
-                + "\nWhat Cha can I get for you?\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        System.out.println(
+                "Hello! I'm\n" + logo + "\nWhat Cha can I get for you?\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
     }
 
     /**

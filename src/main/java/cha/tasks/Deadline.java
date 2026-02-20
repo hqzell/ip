@@ -20,7 +20,7 @@ public class Deadline extends Task {
      * Creates a Deadline task.
      *
      * @param description Description of the task.
-     * @param by The deadline date and time.
+     * @param by          The deadline date and time.
      */
     public Deadline(String description, LocalDateTime by) {
         super(description);
@@ -30,18 +30,20 @@ public class Deadline extends Task {
     public static Deadline parse(String input) throws ChaException {
         String[] parts = input.split(" /by ");
         String desc = parts[0].trim();
-        if (desc.isEmpty()) throw new ChaException(
-            "CHA doesn't know what to do! (The description cannot be empty)");
+        if (desc.isEmpty())
+            throw new ChaException(
+                    "CHA doesn't know what to do! (The description cannot be empty)");
         String by = (parts.length > 1 ? parts[1].trim() : "");
-        if (by.isEmpty()) throw new ChaException(
-            "CHA doesn't know when it's due! (Use /by <time>)");
+        if (by.isEmpty())
+            throw new ChaException(
+                    "CHA doesn't know when it's due! (Use /by <time>)");
         try {
             DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
             LocalDateTime byFormatted = LocalDateTime.parse(by, inputFormatter);
             return new Deadline(desc, byFormatted);
         } catch (DateTimeParseException e) {
             throw new ChaException(
-                "CHA can't understand that time! (Use format: yyyy-MM-dd HHmm)");
+                    "CHA can't understand that time! (Use format: yyyy-MM-dd HHmm)");
         }
     }
 
@@ -72,8 +74,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        DateTimeFormatter outputFormatter =
-                DateTimeFormatter.ofPattern("dd MMM yyyy, ha", Locale.ENGLISH);
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, ha", Locale.ENGLISH);
 
         return super.toString()
                 + " (by: " + by.format(outputFormatter) + ")";
@@ -87,8 +88,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toFileFormat() {
-        DateTimeFormatter fileFormatter =
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
         return "D | " + (isDone ? "1" : "0")
                 + " | " + super.toString()
