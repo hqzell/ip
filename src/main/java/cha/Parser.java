@@ -5,8 +5,33 @@ import cha.tasks.Event;
 import cha.tasks.Task;
 import cha.tasks.ToDo;
 
+/**
+ * Parses user input commands and executes the corresponding actions
+ * on the TaskList, Ui, and Storage components.
+ */
 public class Parser {
 
+    /**
+     * Parses the given user command and performs the corresponding action.
+     *
+     * <p>This method handles different command types such as:
+     * <ul>
+     *     <li>bye – exits the application</li>
+     *     <li>list – displays all tasks</li>
+     *     <li>mark – marks a task as completed</li>
+     *     <li>delete – removes a task</li>
+     *     <li>todo – adds a new ToDo task</li>
+     *     <li>deadline – adds a new Deadline task</li>
+     *     <li>event – adds a new Event task</li>
+     * </ul>
+     *
+     * @param command The full user input string.
+     * @param tasks The TaskList that stores all current tasks.
+     * @param ui The Ui object responsible for displaying messages to the user.
+     * @param storage The Storage object responsible for saving tasks on data file.
+     * @return true if the command is "bye" (indicating the program should exit),
+     *         false otherwise.
+     */
     public static boolean parse(String command, TaskList tasks, Ui ui, Storage storage) {
         String[] words = command.trim().split(" ", 2);
         String action = words[0];
