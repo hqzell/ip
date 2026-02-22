@@ -91,7 +91,7 @@ public class Deadline extends Task {
         DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
         return "D | " + (isDone ? "1" : "0")
-                + " | " + super.toString()
+                + " | " + desc
                 + " | " + by.format(fileFormatter);
     }
 }

@@ -2,28 +2,27 @@ package cha;
 
 public class Cha {
 
-    public static void main(String[] args) {
-        String logo = "  _____ _   _     _        ~~      \n"
-                + " / ____| | | |   / \\   ___~_~~____\n"
-                + "| |    | |_| |  / _ \\  |         | \n"
-                + "| |    |  _  | / ___ \\ |_________|\n"
-                + "| |____| | | |/ /   \\ \\ \\        /\n"
-                + " \\_____|_| |_|_/     \\_\\ \\______/\n";
+    private Storage storage;
+    private TaskList tasks;
 
-        Ui ui = new Ui();
-        ui.showWelcome(logo);
+    public Cha() {
+        storage = new Storage();
+        tasks = new TaskList(storage.load());
+    }
 
-        Storage storage = new Storage();
-        TaskList tasks = new TaskList(storage.load());
+    public String getWelcomeMessage() {
+        return "Hello! I'm Cha, your personal tea-making assistant.\nWhat do you want to make?";
+    }
 
-        boolean isExit = false;
-        while (!isExit) {
-            try {
-                String fullCommand = ui.readCommand();
-                isExit = Parser.parse(fullCommand, tasks, ui, storage);
-            } catch (Exception e) {
-                ui.showError(e.getMessage());
-            }
+    public String getResponse(String input) {
+        try {
+            return Parser.parse(input, tasks, storage);
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
         }
+    }
+
+    public boolean isExit(String input) {
+        return input.equals("bye");
     }
 }

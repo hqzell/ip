@@ -30,7 +30,7 @@ public class Parser {
      * @return true if the command is "bye" (indicating the program should exit),
      *         false otherwise.
      */
-    public static boolean parse(String command, TaskList tasks, Ui ui, Storage storage) {
+    public static String parse(String command, TaskList tasks, Storage storage) {
         String[] words = command.trim().split(" ", 2);
         String action = words[0];
 
@@ -38,46 +38,41 @@ public class Parser {
             switch (action) {
 
                 case "bye":
-                    ui.showMessage("CHA CHA CHA! See you again soon!");
-                    return true;
+                    return "CHA CHA CHA! See you again soon!";
 
                 case "list":
                     if (tasks.size() == 0) {
-                        ui.showMessage("No Chas brewing yet!");
+                        return "No Chas brewing yet!";
                     } else {
-                        ui.showMessage("Here are your Chas:\n"
-                                + tasks.listTasks());
+                        return "Here are your Chas:\n"
+                                + tasks.listTasks();
                     }
-                    break;
 
                 case "mark":
                     int markIdx = Integer.parseInt(words[1]) - 1;
                     Task marked = tasks.markTaskAsDone(markIdx);
                     storage.save(tasks.getAllTasks());
 
-                    ui.showMessage("Great! Your Cha is completed:\n  "
-                            + marked);
-                    break;
+                    return "Great! Your Cha is completed:\n  "
+                            + marked;
 
                 case "delete":
                     int delIdx = Integer.parseInt(words[1]) - 1;
                     Task removed = tasks.deleteTask(delIdx);
                     storage.save(tasks.getAllTasks());
 
-                    ui.showMessage("Bye bye Cha! I've removed this task:\n  "
+                    return "Bye bye Cha! I've removed this task:\n  "
                             + removed
-                            + "\nNow you have " + tasks.size() + " Chas brewing.");
-                    break;
+                            + "\nNow you have " + tasks.size() + " Chas brewing.";
 
                 case "todo":
                     Task todo = new ToDo(words[1].trim());
                     tasks.addTask(todo);
                     storage.save(tasks.getAllTasks());
 
-                    ui.showMessage("On it! One Cha coming right up :D\n  "
+                    return "On it! One Cha coming right up :D\n  "
                             + todo
-                            + "\nNow you have " + tasks.size() + " Chas brewing.");
-                    break;
+                            + "\nNow you have " + tasks.size() + " Chas brewing.";
 
                 case "find":
                     if (words.length < 2 || words[1].trim().isEmpty()) {
@@ -85,42 +80,37 @@ public class Parser {
                     }
 
                     String keyword = words[1].trim();
-                    String results = tasks.findTasks(keyword);
+                    String results = tasks.findTask(keyword);
 
-                    ui.showMessage("Here are the matching tasks in your list:\n"
-                            + results);
-                    break;
+                    return "Here are the matching tasks in your list:\n"
+                            + results;
 
                 case "deadline":
                     Task deadline = Deadline.parse(words[1].trim());
                     tasks.addTask(deadline);
                     storage.save(tasks.getAllTasks());
 
-                    ui.showMessage("We got you, your Cha is on the way!\n  "
+                    return "We got you, your Cha is on the way!\n  "
                             + deadline
-                            + "\nNow you have " + tasks.size() + " Chas brewing.");
-                    break;
+                            + "\nNow you have " + tasks.size() + " Chas brewing.";
 
                 case "event":
                     Task event = Event.parse(words[1].trim());
                     tasks.addTask(event);
                     storage.save(tasks.getAllTasks());
 
-                    ui.showMessage("Scheduled! We'll see you there~\n  "
+                    return "Scheduled! We'll see you there~\n  "
                             + event
-                            + "\nNow you have " + tasks.size() + " Chas brewing.");
-                    break;
+                            + "\nNow you have " + tasks.size() + " Chas brewing.";
 
                 default:
-                    ui.showError("Unknown command!");
+                    return "Unknown command!";
             }
 
         } catch (IndexOutOfBoundsException e) {
-            ui.showError("Invalid task number.");
+            return "Invalid task number.";
         } catch (Exception e) {
-            ui.showError(e.getMessage());
+            return e.getMessage();
         }
-
-        return false;
     }
 }

@@ -83,23 +83,23 @@ public class TaskList {
      */
     public String findTask(String keyword) {
         StringBuilder sb = new StringBuilder();
-        int matchCount = 0;
+        int count = 0;
 
         for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).toString().toLowerCase().contains(keyword.toLowerCase())) {
-                matchCount++;
-                sb.append(matchCount)
-                        .append(".")
-                        .append(tasks.get(i))
-                        .append("\n");
+            Task t = tasks.get(i);
+
+            if (t.toString().contains(keyword)) {
+                count++;
+                sb.append(i + 1).append(". ")
+                        .append(t).append("\n");
             }
         }
 
-        if (matchCount == 0) {
-            return "No matching Chas found!";
+        if (count == 0) {
+            return "No matching tasks found.";
         }
 
-        return sb.toString().trim();
+        return sb.toString();
     }
 
     /**
