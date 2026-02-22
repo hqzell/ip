@@ -14,17 +14,14 @@ public class Parser {
     /**
      * Parses the given user command and performs the corresponding action.
      *
-     * <p>
      * This method handles different command types such as:
-     * <ul>
-     * <li>bye – exits the application</li>
-     * <li>list – displays all tasks</li>
-     * <li>mark – marks a task as completed</li>
-     * <li>delete – removes a task</li>
-     * <li>todo – adds a new ToDo task</li>
-     * <li>deadline – adds a new Deadline task</li>
-     * <li>event – adds a new Event task</li>
-     * </ul>
+     * bye – exits the application
+     * list – displays all tasks
+     * mark – marks a task as completed
+     * delete – removes a task
+     * todo – adds a new ToDo task
+     * deadline – adds a new Deadline task
+     * event – adds a new Event task
      *
      * @param command The full user input string.
      * @param tasks   The TaskList that stores all current tasks.
@@ -70,6 +67,22 @@ public class Parser {
                     ui.showMessage("Bye bye Cha! I've removed this task:\n  "
                             + removed
                             + "\nNow you have " + tasks.size() + " Chas brewing.");
+                    break;
+
+                case "todo":
+                    Task todo = new ToDo(words[1].trim());
+                    tasks.addTask(todo);
+                    storage.save(tasks.getAllTasks());
+                case "find":
+                    if (words.length < 2 || words[1].trim().isEmpty()) {
+                        throw new ChaException("Please provide a keyword to search.");
+                    }
+
+                    String keyword = words[1].trim();
+                    String results = tasks.findTasks(keyword);
+
+                    ui.showMessage("Here are the matching tasks in your list:\n"
+                            + results);
                     break;
 
                 case "todo":
