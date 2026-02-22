@@ -73,6 +73,12 @@ public class Parser {
                     Task todo = new ToDo(words[1].trim());
                     tasks.addTask(todo);
                     storage.save(tasks.getAllTasks());
+
+                    ui.showMessage("On it! One Cha coming right up :D\n  "
+                            + todo
+                            + "\nNow you have " + tasks.size() + " Chas brewing.");
+                    break;
+
                 case "find":
                     if (words.length < 2 || words[1].trim().isEmpty()) {
                         throw new ChaException("Please provide a keyword to search.");
@@ -83,16 +89,6 @@ public class Parser {
 
                     ui.showMessage("Here are the matching tasks in your list:\n"
                             + results);
-                    break;
-
-                case "todo":
-                    Task todo = new ToDo(words[1].trim());
-                    tasks.addTask(todo);
-                    storage.save(tasks.getAllTasks());
-
-                    ui.showMessage("On it! One Cha coming right up :D\n  "
-                            + todo
-                            + "\nNow you have " + tasks.size() + " Chas brewing.");
                     break;
 
                 case "deadline":
