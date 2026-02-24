@@ -1,5 +1,7 @@
 package cha.tasks;
 
+import cha.ChaException;
+
 /**
  * Represents a generic task.
  * A Task contains a description and a completion status.
@@ -27,6 +29,18 @@ public abstract class Task {
      */
     public void markAsDone() {
         this.isDone = true;
+    }
+
+    /**
+     * Updates the description of this task.
+     *
+     * @param description The new description of the task.
+     * @throws AssertionError If the description is null or empty.
+     */
+    public void setDescription(String description) {
+        assert description != null && !description.isEmpty()
+                : "Description cannot be empty";
+        this.desc = description;
     }
 
     /**
@@ -64,5 +78,23 @@ public abstract class Task {
     @Override
     public String toString() {
         return "[" + getType() + "][" + getStatus() + "] " + desc;
+    }
+
+    /**
+     * Updates this task based on the given update arguments.
+     *
+     * @param args Update arguments (e.g. "/desc new description")
+     * @throws ChaException If update format is invalid
+     */
+    public void update(String args) throws ChaException {
+        if (args.contains("/desc ")) {
+            String[] parts = args.split("/desc ", 2);
+            if (parts.length < 2 || parts[1].trim().isEmpty()) {
+                throw new ChaException("Description cannot be empty.");
+            }
+            setDescription(parts[1].trim());
+        } else {
+            throw new ChaException("Invalid update field for this task.");
+        }
     }
 }

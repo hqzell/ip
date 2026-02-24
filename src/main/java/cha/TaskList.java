@@ -70,7 +70,8 @@ public class TaskList {
      * @return The task at the given index.
      * @throws IndexOutOfBoundsException If the index is invalid.
      */
-    public Task getTask(int index) throws IndexOutOfBoundsException {
+    public Task getTask(int index) {
+        assert index >= 0 && index < tasks.size() : "Index out of bounds";
         return tasks.get(index);
     }
 

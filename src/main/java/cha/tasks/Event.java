@@ -20,8 +20,8 @@ public class Event extends Task {
     private static final String ERROR_MISSING_TO = "CHA doesn't know when it ends! (Use /from <start> /to <end>)";
 
     /** Start and end times of the event. */
-    private final String startTime;
-    private final String endTime;
+    private String startTime;
+    private String endTime;
 
     /**
      * Creates an Event task.
@@ -111,6 +111,28 @@ public class Event extends Task {
     }
 
     /**
+     * Updates the start time of this event.
+     *
+     * @param from The new start time.
+     * @throws AssertionError If from is null.
+     */
+    public void setFrom(String from) {
+        assert from != null : "Start time cannot be null";
+        this.startTime = from;
+    }
+
+    /**
+     * Updates the end time of this event.
+     *
+     * @param to The new end time.
+     * @throws AssertionError If to is null.
+     */
+    public void setTo(String to) {
+        assert to != null : "End time cannot be null";
+        this.endTime = to;
+    }
+
+    /**
      * Returns a file-storage format representation of this Event.
      *
      * @return Formatted string for saving to file.
@@ -138,5 +160,39 @@ public class Event extends Task {
 
         return super.toString()
                 + " (from: " + startTime + " to: " + endTime + ")";
+    }
+
+    @Override
+    public void update(String args) throws ChaException {
+        assert args != null : "Update arguments should not be null";
+
+        boolean updated = false;
+
+        if (args.contains("/desc ")) {
+            super.update(args);
+            updated = true;
+        }
+
+        if (args.contains("/from ") && args.contains("/to ")) {
+            try {
+                String from = args.split("/from ", 2)[1]
+                        .split(" /to", 2)[0].trim();
+                String to = args.split("/to ", 2)[1].trim();
+
+                if (from.isEmpty() || to.isEmpty()) {
+                    throw new ChaException("Event times cannot be empty.");
+                }
+
+                setFrom(from);
+                setTo(to);
+                updated = true;
+            } catch (Exception e) {
+                throw new ChaException("Event format: /from START /to END");
+            }
+        }
+
+        if (!updated) {
+            throw new ChaException("Valid fields: /desc or /from /to");
+        }
     }
 }

@@ -1,5 +1,8 @@
 package cha;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import cha.tasks.Deadline;
 import cha.tasks.Event;
 import cha.tasks.Task;
@@ -103,6 +106,9 @@ public class Parser {
                             + event
                             + "\nNow you have " + tasks.size() + " Chas brewing.";
 
+                case "update":
+                    return handleUpdate(words[1], tasks, storage);
+
                 default:
                     return "Unknown command!";
             }
@@ -112,5 +118,47 @@ public class Parser {
         } catch (Exception e) {
             return e.getMessage();
         }
+    }
+
+    /**
+     * Handles the update command by modifying fields of an existing task.
+     *
+     * @param input   The full user input string.
+     * @param tasks   The task list containing existing tasks.
+     * @param storage The storage instance used for persistence.
+     * @return A confirmation message describing the updated task.
+     * @throws ChaException If the command format is invalid
+     *                      or the index is out of bounds.
+     */
+    private static String handleUpdate(String input,
+            TaskList tasks,
+            Storage storage) throws ChaException {
+
+        assert input != null : "Update input should not be null";
+
+        String[] parts = input.trim().split(" ", 2);
+
+        if (parts.length < 2) {
+            throw new ChaException("Please use this format: \"update INDEX /field value\"");
+        }
+
+        int index;
+        try {
+            index = Integer.parseInt(parts[0]) - 1;
+        } catch (NumberFormatException e) {
+            throw new ChaException("Index must be a number.");
+        }
+
+        if (index < 0 || index >= tasks.size()) {
+            throw new ChaException("Invalid task index.");
+        }
+
+        Task task = tasks.getTask(index);
+        task.update(parts[1].trim());
+
+        storage.save(tasks.getAllTasks());
+
+        return "Got it! I've updated this task:\n  "
+                + (index + 1) + ". " + task;
     }
 }

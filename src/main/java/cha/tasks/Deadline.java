@@ -34,7 +34,7 @@ public class Deadline extends Task {
             Locale.ENGLISH);
 
     /** The date and time by which the task must be completed. */
-    private final LocalDateTime deadline;
+    private LocalDateTime deadline;
 
     /**
      * Creates a Deadline task.
@@ -110,6 +110,17 @@ public class Deadline extends Task {
     }
 
     /**
+     * Updates the deadline date and time of this task.
+     *
+     * @param by The new deadline date and time.
+     * @throws AssertionError If {@code by} is null.
+     */
+    public void setBy(LocalDateTime by) {
+        assert by != null : "Deadline time cannot be null";
+        this.deadline = by;
+    }
+
+    /**
      * Returns a user-friendly string representation of the deadline.
      *
      * @return Formatted deadline string.
@@ -135,5 +146,40 @@ public class Deadline extends Task {
         return "D | " + (isDone ? "1" : "0")
                 + " | " + desc
                 + " | " + deadline.format(FILE_FORMATTER);
+    }
+
+    @Override
+    public void update(String args) throws ChaException {
+        assert args != null : "Update arguments should not be null";
+
+        boolean updated = false;
+
+        // Allow description update
+        if (args.contains("/desc ")) {
+            super.update(args);
+            updated = true;
+        }
+
+        if (args.contains("/by ")) {
+            String[] parts = args.split("/by ", 2);
+            if (parts.length < 2 || parts[1].trim().isEmpty()) {
+                throw new ChaException("Deadline time cannot be empty.");
+            }
+
+            try {
+                LocalDateTime parsed = LocalDateTime.parse(
+                        parts[1].trim(),
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                setBy(parsed);
+                updated = true;
+            } catch (Exception e) {
+                throw new ChaException(
+                        "Use format: yyyy-MM-dd HHmm (e.g. 2025-10-15 1800)");
+            }
+        }
+
+        if (!updated) {
+            throw new ChaException("Valid fields: /desc or /by");
+        }
     }
 }
