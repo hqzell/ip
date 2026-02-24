@@ -8,59 +8,84 @@ import cha.ChaException;
  */
 public class Event extends Task {
 
-    protected String from;
-    protected String to;
+    /** Delimiters used in parsing user input. */
+    private static final String FROM_DELIMITER = " /from ";
+    private static final String TO_DELIMITER = " /to ";
+
+    /** Error messages. */
+    private static final String ERROR_EMPTY_DESCRIPTION = "CHA doesn't know what to do! (The description cannot be empty)";
+
+    private static final String ERROR_MISSING_FROM = "CHA doesn't know when it starts! (Use /from <start> /to <end>)";
+
+    private static final String ERROR_MISSING_TO = "CHA doesn't know when it ends! (Use /from <start> /to <end>)";
+
+    /** Start and end times of the event. */
+    private final String startTime;
+    private final String endTime;
 
     /**
-     * Creates an Event task with the given description,
-     * start time, and end time.
+     * Creates an Event task.
      *
-     * @param desc The description of the event.
-     * @param from The start time of the event.
-     * @param to   The end time of the event.
+     * @param description The description of the event.
+     * @param startTime   The start time of the event.
+     * @param endTime     The end time of the event.
      */
-    public Event(String desc, String from, String to) {
-        super(desc);
-        this.from = from;
-        this.to = to;
+    public Event(String description, String startTime, String endTime) {
+        super(description);
+        assert startTime != null : "Start time must not be null";
+        assert endTime != null : "End time must not be null";
+
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     /**
-     * Parses the user input string and creates an Event object.
-     * The expected format is:
-     * description /from <start> /to <end>
+     * Parses user input and creates an Event object.
      *
-     * @param input The raw input string containing the event details.
-     * @return A new Event object constructed from the input.
-     * @throws ChaException If the description, start time,
-     *                      or end time is missing.
+     * Expected format:
+     * <description> /from <start> /to <end>
+     *
+     * @param input Raw input string.
+     * @return Parsed Event object.
+     * @throws ChaException If any required component is missing.
      */
     public static Event parse(String input) throws ChaException {
-        String[] descAndTimes = input.split("/from");
-        String desc = descAndTimes[0].trim();
-        if (desc.isEmpty())
-            throw new ChaException(
-                    "CHA doesn't know what to do! (The description cannot be empty)");
+        assert input != null : "Input to parse() must not be null";
 
-        String times = descAndTimes.length > 1 ? descAndTimes[1].trim() : "";
-        if (times.isEmpty())
-            throw new ChaException(
-                    "CHA doesn't know when it starts! (Use /from <start> /to <end>)");
+        String[] descriptionSplit = input.split(FROM_DELIMITER, 2);
+        String description = descriptionSplit[0].trim();
 
-        String[] timeParts = times.split("/to");
-        String from = timeParts[0].trim();
-        String to = (timeParts.length > 1 ? timeParts[1].trim() : "");
-        if (to.isEmpty())
-            throw new ChaException(
-                    "CHA doesn't know when it ends! (Use /from <start> /to <end>)");
+        if (description.isEmpty()) {
+            throw new ChaException(ERROR_EMPTY_DESCRIPTION);
+        }
 
-        return new Event(desc, from, to);
+        if (descriptionSplit.length < 2) {
+            throw new ChaException(ERROR_MISSING_FROM);
+        }
+
+        String[] timeSplit = descriptionSplit[1].split(TO_DELIMITER, 2);
+        String startTime = timeSplit[0].trim();
+
+        if (startTime.isEmpty()) {
+            throw new ChaException(ERROR_MISSING_FROM);
+        }
+
+        if (timeSplit.length < 2) {
+            throw new ChaException(ERROR_MISSING_TO);
+        }
+
+        String endTime = timeSplit[1].trim();
+        if (endTime.isEmpty()) {
+            throw new ChaException(ERROR_MISSING_TO);
+        }
+
+        return new Event(description, startTime, endTime);
     }
 
     /**
      * Returns the type identifier for this task.
      *
-     * @return The string "E".
+     * @return "E" representing Event.
      */
     @Override
     public String getType() {
@@ -68,25 +93,50 @@ public class Event extends Task {
     }
 
     /**
-     * Returns the file format representation of this Event.
+     * Returns the start time.
      *
-     * @return A formatted string suitable for saving to file.
+     * @return Start time as String.
      */
-    @Override
-    public String toFileFormat() {
-        return "E | " + (isDone ? "1" : "0") + " | "
-                + desc + " | " + from + " - " + to;
+    public String getStartTime() {
+        return startTime;
     }
 
     /**
-     * Returns a string representation of this Event
-     * for display to the user.
+     * Returns the end time.
      *
-     * @return A formatted string containing the description
-     *         and event timing.
+     * @return End time as String.
+     */
+    public String getEndTime() {
+        return endTime;
+    }
+
+    /**
+     * Returns a file-storage format representation of this Event.
+     *
+     * @return Formatted string for saving to file.
+     */
+    @Override
+    public String toFileFormat() {
+        assert desc != null : "Description must not be null";
+        assert startTime != null : "Start time must not be null";
+        assert endTime != null : "End time must not be null";
+
+        return "E | " + (isDone ? "1" : "0")
+                + " | " + desc
+                + " | " + startTime + " - " + endTime;
+    }
+
+    /**
+     * Returns a user-friendly string representation.
+     *
+     * @return Display string of the Event.
      */
     @Override
     public String toString() {
-        return super.toString() + " (from: " + from + " to: " + to + ")";
+        assert startTime != null : "Start time must not be null";
+        assert endTime != null : "End time must not be null";
+
+        return super.toString()
+                + " (from: " + startTime + " to: " + endTime + ")";
     }
 }

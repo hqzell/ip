@@ -8,42 +8,85 @@ import java.util.Locale;
 import cha.ChaException;
 
 /**
- * Represents a deadline task that must be completed before a specific
- * date and time.
+ * Represents a deadline task that must be completed before a specific date and
+ * time.
  */
 public class Deadline extends Task {
 
+    /** Delimiter used to separate description and deadline. */
+    private static final String BY_DELIMITER = " /by ";
+
+    /** Expected input date-time format. */
+    private static final String INPUT_DATE_PATTERN = "yyyy-MM-dd HHmm";
+
+    /** Format used for file storage. */
+    private static final String FILE_DATE_PATTERN = "yyyy-MM-dd HHmm";
+
+    /** Format used for user display. */
+    private static final String OUTPUT_DATE_PATTERN = "dd MMM yyyy, ha";
+
+    /** Pre-created formatters (avoid recreating repeatedly). */
+    private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern(INPUT_DATE_PATTERN);
+
+    private static final DateTimeFormatter FILE_FORMATTER = DateTimeFormatter.ofPattern(FILE_DATE_PATTERN);
+
+    private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern(OUTPUT_DATE_PATTERN,
+            Locale.ENGLISH);
+
     /** The date and time by which the task must be completed. */
-    private LocalDateTime by;
+    private final LocalDateTime deadline;
 
     /**
      * Creates a Deadline task.
      *
      * @param description Description of the task.
-     * @param by          The deadline date and time.
+     * @param deadline    The deadline date and time.
      */
-    public Deadline(String description, LocalDateTime by) {
+    public Deadline(String description, LocalDateTime deadline) {
         super(description);
-        this.by = by;
+        assert deadline != null : "Deadline date must not be null";
+        this.deadline = deadline;
     }
 
+    /**
+     * Parses a string into a Deadline task.
+     *
+     * Expected format:
+     * <description> /by yyyy-MM-dd HHmm
+     *
+     * @param input User input string.
+     * @return Parsed Deadline object.
+     * @throws ChaException If input format is invalid.
+     */
     public static Deadline parse(String input) throws ChaException {
-        String[] parts = input.split(" /by ");
-        String desc = parts[0].trim();
-        if (desc.isEmpty())
+        assert input != null : "Input to parse() must not be null";
+
+        String[] parts = input.split(BY_DELIMITER, 2);
+        String description = parts[0].trim();
+
+        if (description.isEmpty()) {
             throw new ChaException(
                     "CHA doesn't know what to do! (The description cannot be empty)");
-        String by = (parts.length > 1 ? parts[1].trim() : "");
-        if (by.isEmpty())
+        }
+
+        if (parts.length < 2) {
             throw new ChaException(
                     "CHA doesn't know when it's due! (Use /by <time>)");
+        }
+
+        String deadlineText = parts[1].trim();
+        if (deadlineText.isEmpty()) {
+            throw new ChaException(
+                    "CHA doesn't know when it's due! (Use /by <time>)");
+        }
+
         try {
-            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-            LocalDateTime byFormatted = LocalDateTime.parse(by, inputFormatter);
-            return new Deadline(desc, byFormatted);
+            LocalDateTime parsedDeadline = LocalDateTime.parse(deadlineText, INPUT_FORMATTER);
+            return new Deadline(description, parsedDeadline);
         } catch (DateTimeParseException e) {
             throw new ChaException(
-                    "CHA can't understand that time! (Use format: yyyy-MM-dd HHmm)");
+                    "CHA can't understand that time! (Use format: "
+                            + INPUT_DATE_PATTERN + ")");
         }
     }
 
@@ -60,40 +103,37 @@ public class Deadline extends Task {
     /**
      * Returns the deadline date and time.
      *
-     * @return The deadline as a LocalDateTime.
+     * @return Deadline as LocalDateTime.
      */
-    public LocalDateTime getBy() {
-        return by;
+    public LocalDateTime getDeadline() {
+        return deadline;
     }
 
     /**
      * Returns a user-friendly string representation of the deadline.
-     * The date is formatted as MMM dd yyyy HHmm.
      *
      * @return Formatted deadline string.
      */
     @Override
     public String toString() {
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, ha", Locale.ENGLISH);
+        assert desc != null : "Deadline date must not be null";
 
         return super.toString()
-                + " (by: " + by.format(outputFormatter) + ")";
+                + " (by: " + deadline.format(OUTPUT_FORMATTER) + ")";
     }
 
     /**
      * Converts the task into a file-storage format.
-     * The date is saved in yyyy-MM-dd HHmm format.
      *
      * @return Formatted string for file storage.
      */
     @Override
     public String toFileFormat() {
-        assert description != null : "Description should not be null";
-        assert by != null : "Deadline date should not be null";
-        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+        assert desc != null : "Description should not be null";
+        assert deadline != null : "Deadline date should not be null";
 
         return "D | " + (isDone ? "1" : "0")
                 + " | " + desc
-                + " | " + by.format(fileFormatter);
+                + " | " + deadline.format(FILE_FORMATTER);
     }
 }
