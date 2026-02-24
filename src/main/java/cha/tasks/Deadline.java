@@ -88,6 +88,8 @@ public class Deadline extends Task {
      */
     @Override
     public String toFileFormat() {
+        assert description != null : "Description should not be null";
+        assert by != null : "Deadline date should not be null";
         DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
         return "D | " + (isDone ? "1" : "0")

@@ -33,6 +33,7 @@ public class Storage {
      */
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
+        assert FILE_PATH != null : "File path must be defined";
         Path path = Path.of(FILE_PATH);
 
         if (!Files.exists(path)) {
@@ -47,7 +48,6 @@ public class Storage {
                 tasks.add(task);
             }
         }
-
         return tasks;
     }
 
@@ -58,8 +58,10 @@ public class Storage {
      * @param tasks The list of tasks to be saved.
      */
     public void save(ArrayList<Task> tasks) {
+        assert FILE_PATH != null : "File path must be defined";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Task task : tasks) {
+                assert task != null : "Task in list should not be null";
                 writer.write(task.toFileFormat());
                 writer.newLine();
             }
@@ -123,6 +125,7 @@ public class Storage {
      */
     private Task parseTask(String line) {
         String[] parts = line.split(" \\| ");
+        assert parts.length >= 3 : "Invalid task: " + line;
         String type = parts[0];
         boolean isDone = parts[1].equals("1");
         String description = parts[2];
@@ -134,9 +137,12 @@ public class Storage {
                 task = new ToDo(description);
                 break;
             case "D":
+                assert parts.length == 4 : "Deadline must have 4 fields";
                 task = parseDeadline(description, parts[3]);
                 break;
+
             case "E":
+                assert parts.length == 5 : "Event must have 5 fields";
                 task = new Event(description, parts[3], parts[4]);
                 break;
             default:
@@ -157,6 +163,8 @@ public class Storage {
      * @return the created Deadline object.
      */
     private Deadline parseDeadline(String description, String byString) {
+        assert byString != null && !byString.isEmpty()
+                : "Deadline date string should not be empty";
         LocalDateTime by = LocalDateTime.parse(byString, DATE_FORMAT);
         return new Deadline(description, by);
     }
