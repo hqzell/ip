@@ -22,6 +22,7 @@ public class Parser {
      * list – displays all tasks
      * mark – marks a task as completed
      * delete – removes a task
+     * find – searches for tasks containing a keyword
      * todo – adds a new ToDo task
      * deadline – adds a new Deadline task
      * event – adds a new Event task
@@ -68,15 +69,6 @@ public class Parser {
                             + removed
                             + "\nNow you have " + tasks.size() + " Chas brewing.";
 
-                case "todo":
-                    Task todo = new ToDo(words[1].trim());
-                    tasks.addTask(todo);
-                    storage.save(tasks.getAllTasks());
-
-                    return "On it! One Cha coming right up :D\n  "
-                            + todo
-                            + "\nNow you have " + tasks.size() + " Chas brewing.";
-
                 case "find":
                     if (words.length < 2 || words[1].trim().isEmpty()) {
                         throw new ChaException("Please provide a keyword to search.");
@@ -87,6 +79,15 @@ public class Parser {
 
                     return "Here are the matching tasks in your list:\n"
                             + results;
+
+                case "todo":
+                    Task todo = new ToDo(words[1].trim());
+                    tasks.addTask(todo);
+                    storage.save(tasks.getAllTasks());
+
+                    return "On it! One Cha coming right up :D\n  "
+                            + todo
+                            + "\nNow you have " + tasks.size() + " Chas brewing.";
 
                 case "deadline":
                     Task deadline = Deadline.parse(words[1].trim());
@@ -159,6 +160,6 @@ public class Parser {
         storage.save(tasks.getAllTasks());
 
         return "Got it! I've updated this task:\n  "
-                + (index + 1) + ". " + task;
+                + (index + 1) + "." + task;
     }
 }
