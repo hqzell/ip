@@ -164,7 +164,7 @@ public class Storage {
      */
     private Deadline parseDeadline(String description, String byString) {
         assert byString != null && !byString.isEmpty()
-                : "Deadline date string should not be empty";
+                : "Missing date for deadline, use /by <valid date>";
         LocalDateTime by = LocalDateTime.parse(byString, DATE_FORMAT);
         return new Deadline(description, by);
     }
