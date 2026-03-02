@@ -4,14 +4,16 @@ public class Cha {
 
     private Storage storage;
     private TaskList tasks;
+    private String welcomeString;
 
     public Cha() {
         storage = new Storage();
         tasks = new TaskList(storage.load());
+        welcomeString = "Hello! I'm Cha, your personal tea-making assistant.\nWhat do you want to make?";
     }
 
     public String getWelcomeMessage() {
-        return "Hello! I'm Cha, your personal tea-making assistant.\nWhat do you want to make?";
+        return welcomeString;
     }
 
     public String getResponse(String input) {
