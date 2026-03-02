@@ -4,3 +4,5 @@ T | 0 | matcha
 T | 1 | matcha
 D | 0 | matcha | 2025-11-11 1100
 D | 0 | gomacha | 2026-02-25 1200
+T | 0 | matcha
+T | 0 | sun'
