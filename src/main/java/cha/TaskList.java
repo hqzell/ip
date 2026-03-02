@@ -64,14 +64,15 @@ public class TaskList {
     }
 
     /**
-     * Retrieves the task at the specified index.
+     * Returns the task at the specified index.
      *
-     * @param index The index of the task to retrieve.
+     * @param index The zero-based index of the task.
      * @return The task at the given index.
-     * @throws IndexOutOfBoundsException If the index is invalid.
+     * @throws AssertionError If the index is out of bounds.
      */
     public Task getTask(int index) {
-        assert index >= 0 && index < tasks.size() : "Index out of bounds";
+        assert index >= 0 && index < tasks.size()
+                : "Index out of bounds";
         return tasks.get(index);
     }
 
@@ -130,7 +131,7 @@ public class TaskList {
      */
     public String listTasks() {
         if (tasks.isEmpty()) {
-            return "No tasks in your list!";
+            return "There are no tasks in your list!";
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < tasks.size(); i++) {
